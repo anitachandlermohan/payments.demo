@@ -2,15 +2,16 @@ package com.payments.demo;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 public class Payment {
 
     private @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-
     private String currency;
-    private Double amount;
+    private BigDecimal amount;
 
     @Embedded
     @AttributeOverrides({
@@ -20,7 +21,7 @@ public class Payment {
     })
     private Account counterparty;
 
-    public Payment(String currency, Double amount, Account counterparty) {
+    public Payment(String currency, BigDecimal amount, Account counterparty) {
         this.currency = currency;
         this.amount = amount;
         this.counterparty = counterparty;
@@ -36,11 +37,11 @@ public class Payment {
         this.currency = currency;
     }
 
-    public Double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

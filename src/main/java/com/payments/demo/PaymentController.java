@@ -1,15 +1,32 @@
 package com.payments.demo;
 
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
 import static com.payments.demo.PaymentSpecifications.greaterThanMinimumAmount;
 import static com.payments.demo.PaymentSpecifications.usesCurrencyInList;
 
+@Validated
 @RestController
 public class PaymentController {
+
+    @Autowired
+    private PaymentValidator paymentValidator;
+
+    @InitBinder(value = "payment")
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(paymentValidator);
+    }
 
     private final PaymentRepository paymentRepository;
 
@@ -33,7 +50,7 @@ public class PaymentController {
     }
 
     @PostMapping("/payments")
-    public Payment createPayment(@RequestBody Payment payment) {
-        return paymentRepository.save(payment);
+    public ResponseEntity<Payment> createPayment(@Valid @RequestBody Payment payment) {
+        return  ResponseEntity.status(HttpStatus.CREATED).body(paymentRepository.save(payment));
     }
 }
