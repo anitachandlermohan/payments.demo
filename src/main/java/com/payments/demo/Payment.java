@@ -1,20 +1,32 @@
 package com.payments.demo;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
 public class Payment {
-    private String id;
+
+    private @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id;
+
     private String currency;
     private Double amount;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride( name = "accountNumber", column = @Column(name = "counterparty_account_umber")),
+            @AttributeOverride( name = "sortCode", column = @Column(name = "counterparty_sort_code")),
+            @AttributeOverride( name = "type", column = @Column(name = "counterparty_type"))
+    })
     private Account counterparty;
 
-    public Payment(String id, String currency, Double amount, Account counterparty) {
-        this.id = id;
+    public Payment(String currency, Double amount, Account counterparty) {
         this.currency = currency;
         this.amount = amount;
         this.counterparty = counterparty;
     }
+
+    public Payment(){}
 
     public String getCurrency() {
         return currency;
@@ -40,11 +52,8 @@ public class Payment {
         this.counterparty = counterparty;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 }

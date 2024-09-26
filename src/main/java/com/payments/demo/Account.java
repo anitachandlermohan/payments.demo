@@ -1,5 +1,8 @@
 package com.payments.demo;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class Account {
     private String accountNumber;
     private String sortCode;
@@ -10,6 +13,8 @@ public class Account {
         this.sortCode = sortCode;
         this.type = type;
     }
+
+    public Account(){}
 
     public String getType() {
         return type;
@@ -33,5 +38,4 @@ public class Account {
     public void setSortCode(String sortCode) {
         this.sortCode = sortCode;
     }
-
 }
